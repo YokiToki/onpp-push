@@ -15,7 +15,7 @@ class User extends Model {
     this.pushToken = props.pushToken || null;
     this.fare = new Fare(props.fareByFare || {});
     this.checkIns = (props.checkInsByUserIdList || []).map(checkIn => {
-        return new CheckIn(checkIn);
+        return new CheckIn(checkIn || {});
     });
   }
 }

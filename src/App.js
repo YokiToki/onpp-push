@@ -1,18 +1,28 @@
 import config from '../config';
 import Push from '../src/Push';
 import GraphQl from '../src/GraphQl';
-import User from './Models/User';
+import PayCalc from "./Models/PayCalc";
 
 const graphQl = new GraphQl(config.graphQlUrl);
-// const push = new Push(config.FCMServerKey);
-// const token = 'eA1bYqW3oiE:APA91bHW83DCofo4yPOmn-C3hGXlO_AUyKC3SF8wde01gdwIBzTqaHCDerCCi1YqBkVspUu_UzirWFETOxsBwORU-12mlF045Rwvs3BnQ2QzGMAsnnq2bsXy0MGh5EQ0h1Ds6Wjdvyq9';
-//
-//
-// push.send(token, 'Testing', 'Body');
+const push = new Push(config.FCMServerKey);
 
-graphQl.getUsers(data => {
-  const userList = (data.allUsersList || []).map(user => {
-    return new User(user);
+graphQl.getPayCalcs(data => {
+  const payCalcs = (data.allPayCalcsList || []).map(payCalc => {
+    return new PayCalc(payCalc || {});
   });
-  console.log(userList);
+
+  payCalcs.forEach(payCalc => {
+    const token = payCalc.user.pushToken || null;
+    const freeTime = payCalc.user.pushToken || 0;
+    const parkingTime = payCalc.parkingTime || 0;
+    const alertTime = freeTime > config.FCMAlertTime ? (freeTime - config.FCMAlertTime) : config.FCMAlertTime;
+    if (token !== null) {
+      if (parkingTime <= config.FCMWelcomeTime && payCalc.pushEvents.indexOf(config.FCMTypeWelcome) === -1) {
+        push.send(token, 'Прива, ты заехал на парковку', `Время бесплатной парковки ${freeTime} минут!`);
+      }
+      if (parkingTime >= alertTime && payCalc.pushEvents.indexOf(config.FCMTypeAlert) === -1) {
+        push.send(token, 'Внимание!', `Время бесплатной парковки, заканчивается через ${freeTime} минут!`);
+      }
+    }
+  });
 });

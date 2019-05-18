@@ -19,16 +19,18 @@ class Push {
       to: to,
       data: data,
       notification: {
+        alert: title,
         title: title,
-        body: body
+        body: body,
+        vibrate: true,
       }
     };
 
     this.fcm.send(message)
-      .then(function(response){
+      .then(function (response) {
         console.log("Successfully sent with response: ", response);
       })
-      .catch(function(err){
+      .catch(function (err) {
         console.log("Something has gone wrong!");
         console.error(err);
       })
