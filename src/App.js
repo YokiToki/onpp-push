@@ -15,7 +15,7 @@ graphQl.getPayCalcs(data => {
     const checkIn = payCalc.id || 0;
     const userId = payCalc.user.userId || 0;
     const token = payCalc.user.pushToken || null;
-    const freeTime = payCalc.user.pushToken || 0;
+    const freeTime = payCalc.freeTime || 0;
     const parkingTime = payCalc.parkingTime || 0;
     const alertTime = freeTime > config.FCMAlertTime ? (freeTime - config.FCMAlertTime) : config.FCMAlertTime;
     if (token !== null) {
