@@ -12,6 +12,8 @@ graphQl.getPayCalcs(data => {
   });
 
   payCalcs.forEach(payCalc => {
+    const checkIn = payCalc.id || 0;
+    const userId = payCalc.user.userId || 0;
     const token = payCalc.user.pushToken || null;
     const freeTime = payCalc.user.pushToken || 0;
     const parkingTime = payCalc.parkingTime || 0;
@@ -19,10 +21,20 @@ graphQl.getPayCalcs(data => {
     if (token !== null) {
       if (parkingTime <= config.FCMWelcomeTime && payCalc.pushEvents.indexOf(config.FCMTypeWelcome) === -1) {
         push.send(token, 'Прива, ты заехал на парковку', `Время бесплатной парковки ${freeTime} минут!`);
+        graphQl.createEventPush(checkIn, config.FCMTypeWelcome, data => {
+          const pushEventId = data.eventPush.id || 0;
+          console.log(`Sending push type: ${config.FCMTypeWelcome} userId: ${userId}. Crate push event with id ${pushEventId}.`);
+        });
       }
       if (parkingTime >= alertTime && payCalc.pushEvents.indexOf(config.FCMTypeAlert) === -1) {
         push.send(token, 'Внимание!', `Время бесплатной парковки, заканчивается через ${freeTime} минут!`);
+        graphQl.createEventPush(checkIn, config.FCMTypeWelcome, data => {
+          const pushEventId = data.eventPush.id || 0;
+          console.log(`Sending push type: ${config.FCMTypeAlert} userId: ${userId}. Crate push event with id ${pushEventId}.`);
+        });
       }
     }
   });
 });
+
+process.exit(0);

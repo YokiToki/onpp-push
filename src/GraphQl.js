@@ -59,6 +59,25 @@ class GraphQl {
       cb(data)
     )
   }
+
+  /**
+   * @param chekIn
+   * @param type
+   * @param cb
+   */
+  createEventPush(chekIn, type, cb) {
+    const query = `mutation {
+        createEventPush(input: {eventPush: {type: 10, checkIn: 10}}) {
+            eventPush {
+                id
+            }
+        }
+    }`;
+
+    request(this.url, query).then(data =>
+      cb(data)
+    )
+  }
 }
 
 export default GraphQl;
