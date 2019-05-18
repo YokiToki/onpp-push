@@ -12,7 +12,7 @@ class PayCalc extends Model {
     this.freeTime = props.freeTime || 0;
     this.timeDep = props.timeDep || 0;
     this.exitCheck = props.exitCheck || 0;
-    this.user = new User(props.userById || {});
+    this.user = new User(props.userByUserId || {});
     this.pushEvents = (props.pushEventsJson || []).map(pushEvent => {
       return pushEvent.type
     });

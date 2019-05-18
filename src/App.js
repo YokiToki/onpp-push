@@ -22,15 +22,15 @@ graphQl.getPayCalcs(data => {
       if (parkingTime <= config.FCMWelcomeTime && payCalc.pushEvents.indexOf(config.FCMTypeWelcome) === -1) {
         push.send(token, 'Прива, ты заехал на парковку', `Время бесплатной парковки ${freeTime} минут!`);
         graphQl.createEventPush(checkIn, config.FCMTypeWelcome, data => {
-          const pushEventId = data.eventPush.id || 0;
-          console.log(`Sending push type: ${config.FCMTypeWelcome} userId: ${userId}. Crate push event with id ${pushEventId}.`);
+          const pushEventId = data.createEventPush.eventPush.id || 0;
+          console.info(`Sending push type: ${config.FCMTypeWelcome} userId: ${userId}. Crate push event with id ${pushEventId}.`);
         });
       }
       if (parkingTime >= alertTime && payCalc.pushEvents.indexOf(config.FCMTypeAlert) === -1) {
         push.send(token, 'Внимание!', `Время бесплатной парковки, заканчивается через ${freeTime} минут!`);
         graphQl.createEventPush(checkIn, config.FCMTypeWelcome, data => {
-          const pushEventId = data.eventPush.id || 0;
-          console.log(`Sending push type: ${config.FCMTypeAlert} userId: ${userId}. Crate push event with id ${pushEventId}.`);
+          const pushEventId = data.createEventPush.eventPush.id || 0;
+          console.info(`Sending push type: ${config.FCMTypeAlert} userId: ${userId}. Crate push event with id ${pushEventId}.`);
         });
       }
     }
