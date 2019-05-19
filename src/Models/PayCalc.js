@@ -15,6 +15,8 @@ class PayCalc extends Model {
     this.user = new User(props.userByUserId || {});
     this.pushEvents = (props.pushEventsJson || []).map(pushEvent => {
       return pushEvent.type
+    }).filter((elem, pos, arr) => {
+      return arr.indexOf(elem) === pos;
     });
   }
 }

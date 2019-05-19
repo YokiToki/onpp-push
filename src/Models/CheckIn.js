@@ -1,4 +1,5 @@
 import Model from './Model';
+import User from "./User";
 
 class CheckIn extends Model {
   constructor(props) {
@@ -9,6 +10,7 @@ class CheckIn extends Model {
     super.initialize(props);
 
     this.userId = props.userId || 0;
+    this.user = new User(props.userByUserId || {});
     this.timeArr = props.timeArr || 0;
     this.timeDep = props.timeDep || 0;
     this.fare = props.fare || 0;

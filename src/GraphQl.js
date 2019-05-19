@@ -61,18 +61,42 @@ class GraphQl {
   }
 
   /**
-   * @param chekIn
-   * @param type
    * @param cb
    */
-  createEventPush(chekIn, type, cb) {
-    const query = `mutation {
-        createEventPush(input: {eventPush: {type: 10, checkIn: 10}}) {
-            eventPush {
+  getCheckinDepWithoutPushes(cb) {
+    const query = `{
+        allChkinDepWithoutPushesList {
+            id
+            timeArr
+            timeDep
+            userId
+            userByUserId {
+                pushToken
+                token
+                number
                 id
             }
         }
     }`;
+
+    request(this.url, query).then(data =>
+      cb(data)
+    )
+  }
+
+  /**
+   * @param checkIn
+   * @param type
+   * @param cb
+   */
+  createEventPush(checkIn, type, cb) {
+    const query = `mutation {
+      createEventPush(input: {eventPush: {type: ${type}, checkIn: ${checkIn}}}) {
+            eventPush {
+                id
+            }
+          }
+      }`;
 
     request(this.url, query).then(data =>
       cb(data)
